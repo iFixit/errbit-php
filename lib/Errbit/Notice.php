@@ -167,11 +167,15 @@ class Errbit_Notice {
 						$trace = $exception->getTrace();
 
 						$file1 = $exception->getFile();
-						$backtrace->tag('line', array(
-							'number' => $exception->getLine(),
-							'file' => !empty($file1) ? $self->filterTrace($file1) : '<unknown>',
-							'method' =>  "<unknown>"
-						));
+						// if there isn't even a file path, dont bother adding a 
+						// rather useless "<unknown> -> <unknown>" stack line.
+						if ($file1) {
+							$backtrace->tag('line', array(
+								'number' => $exception->getLine(),
+								'file' => !empty($file1) ? $self->filterTrace($file1) : '<unknown>',
+								'method' =>  "<unknown>"
+							));
+						}
 
 						// if there is no trace we should add an empty element
 						if (empty($trace)) {
